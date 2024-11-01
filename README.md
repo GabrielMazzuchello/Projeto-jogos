@@ -1,118 +1,70 @@
-# Projeto-jogos
-Projeto do jogo da unity 
 
-
-
-
-
-
-TÍTULO DO JOGO
+Título do Jogo
+Equipe
 Nome da equipe
 
-GAME DESIGN DOCUMENT
-VERSÃO 1.0
+Game Design Document
+Versão 1.0
 
-
-
-
-
-
-
-
-
-
-
-
-1.	VISÃO GERAL
-Um jogo estilo torre infinita e sem pontos de salvamento porem a torre não será infinita e terá um chefe no final
-Resumo do projeto
-- Do que se trata o projeto? Tipo de jogo? 
+Visão Geral
+Descrição
+Um jogo de estilo torre infinita onde o jogador deve subir até o topo enfrentando desafios, com uma batalha contra o chefe no final. O jogo não possui pontos de salvamento ao longo do percurso.
 
 Gênero
-- Aventura e fantasia 
+Aventura e fantasia
 
 Plataforma
-- PC
+PC
 
 Controles
-Os controles serão simples A para se mover para a esquerda D para a direita e Espaço para pular e o clique esquerdo do mouse para atacar 
-  
 
-2.	ESCOPO DO PROJETO
-- Detalhes do escopo do projeto como um todo.
+A: mover para a esquerda
+D: mover para a direita
+Espaço: pular
+Clique esquerdo do mouse: atacar
+Escopo do Projeto
+Definição dos objetivos, funcionalidades e referências gerais do jogo.
 
 Referências
-- Tower of hell
+Tower of Hell
 
+Gameplay
+Resumo
+O jogador deve escalar uma torre. Caso caia, perde o progresso, e no topo da torre há uma batalha com um chefe final.
 
+Detalhes
 
-Gameplay (Resumo)
-- Uma torre onde o jogador terá que subir se cair perde e ao chegar no topo terá uma batalha com um chefe.
+Níveis: O jogo possui apenas um nível, configurado no estilo de torre infinita.
+Nível 1: Prisão
+Objetivo: Sobreviver e escapar.
+Itens Normais: Moeda, Poção
+Itens Secretos: Armadura lendária
+Mecânicas
+Mecânicas do Jogador
+Movimentação: O jogador possui visão lateral, podendo se mover para os lados e pular.
+Ataque: Possibilidade de atacar.
+Mecânicas do Mundo
+Destruir Objetos: O jogador pode atirar em objetos e destruí-los.
+Forja
+Upar Armas: Não será possível.
+Criar Armas: Não será possível.
 
-Gameplay (Detalhado)
-- 
-Níveis do jogo
-- Terá somente um nível e ele será do tipo torre infinita 
-
-Nível 1	Prisão
-Objetivo	Jogador deverá sair vivo.
-Level Design	 
-Itens Normais	Moeda;
-Potion
-Itens Secretos	Armadura lendária
-3.	MECÂNICAS
-- Informações gerais sobre as mecânicas do jogo.
-
-3.1.	Mecânicas do Player
-<Movimentação>
-	- Jogador terá uma visão lateral e poderá mover o personagem para os lados e pular
-<Atirar>
-	- Jogador poderá atacar.
-
-3.2.	Mecânicas do mundo
-<Destruir objetos>
-	- Jogador poderá atirar em objetos na cena e destruí-los.
-
-3.3.	Forja
-<Upar Armas>
-	- Não poderá upar armas e não teremos sistema de forja
-
-<Criar Armas>
-	- Não poderá criar armas
+História
 
 Sinopse
-- Resumo da história do jogo.
 
-História (Detalhada)
-- Conte a história em detalhes.
+Resumo da história do jogo.
+
+História Detalhada
+(Adicionar detalhes da narrativa aqui).
 
 Personagens
-- História de cada personagem.
-
-
-
-
-
-
-4.	PERSONAGENS
-Ficha técnica de todos os personagens presentes no projeto.
-Player
-Nome	Meloncio
-Sprite	 
-Tipo	Player
-Mecânicas	Correr;
-Saltar;
-
+Jogador
+Nome: Meloncio
+Tipo: Player
+Mecânicas: Correr, Saltar
 Inimigos
-Nome	Jaca
-Sprite	 
-Tipo	Inimigo
-Mecânicas	Andar de um lado para o outro; 
-Tira vida do player ao encostar;
-Destruído com toque na cabeça.
-5.	ITENS
-Ficha técnica de todos os itens presentes no jogo.
-Nome	Estrela
-Sprite	 
-Benefícios	Personagem ganha upgrade na velocidade e não leva dano por 10 segundos.
-
+Nome: Jaca
+Tipo: Inimigo
+Mecânicas: 
+Esse README fornece uma visão geral do projeto e do design do jogo. Preencha as seções de história e narrativa detalhadas conforme elas forem sendo desenvolvidas.
