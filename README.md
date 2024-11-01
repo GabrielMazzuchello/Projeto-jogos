@@ -22,6 +22,7 @@ A: mover para a esquerda
 D: mover para a direita
 Espaço: pular
 Clique esquerdo do mouse: atacar
+
 Escopo do Projeto
 Definição dos objetivos, funcionalidades e referências gerais do jogo.
 
@@ -35,16 +36,12 @@ O jogador deve escalar uma torre. Caso caia, perde o progresso, e no topo da tor
 Detalhes
 
 Níveis: O jogo possui apenas um nível, configurado no estilo de torre infinita.
-Nível 1: Prisão
-Objetivo: Sobreviver e escapar.
-Itens Normais: Moeda, Poção
-Itens Secretos: Armadura lendária
+
 Mecânicas
 Mecânicas do Jogador
 Movimentação: O jogador possui visão lateral, podendo se mover para os lados e pular.
 Ataque: Possibilidade de atacar.
-Mecânicas do Mundo
-Destruir Objetos: O jogador pode atirar em objetos e destruí-los.
+
 Forja
 Upar Armas: Não será possível.
 Criar Armas: Não será possível.
@@ -59,12 +56,15 @@ História Detalhada
 (Adicionar detalhes da narrativa aqui).
 
 Personagens
+
 Jogador
 Nome: Meloncio
 Tipo: Player
 Mecânicas: Correr, Saltar
+
 Inimigos
 Nome: Jaca
 Tipo: Inimigo
 Mecânicas: 
+
 Esse README fornece uma visão geral do projeto e do design do jogo. Preencha as seções de história e narrativa detalhadas conforme elas forem sendo desenvolvidas.
