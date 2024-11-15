@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Player : MonoBehaviour
 {
     public float speed = 5f;
@@ -11,19 +10,26 @@ public class Player : MonoBehaviour
     public Animator anim;
     public bool isground;
 
-    // para o atack
+    // Para o ataque
     public Transform point;
     public float radius;
     public bool isattack;
 
-    // Start is called before the first frame update
+    // Para vida
+    public int maxHealth = 100; // Vida máxima
+    public int currentHealth;  // Vida atual
+    public HealthBar healthBar; // Referência para a barra de vida
+
     void Start()
     {
         rigd = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
+        // Configurar vida inicial
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
     }
-    // Update is called once per frame
+
     void Update()
     {
         Move();
@@ -79,13 +85,13 @@ public class Player : MonoBehaviour
             }
             StartCoroutine(OnAttack());
         }
-
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(point.position, radius);
     }
+
     IEnumerator OnAttack()
     {
         yield return new WaitForSeconds(0.33f);
@@ -97,13 +103,31 @@ public class Player : MonoBehaviour
         if (colisao.gameObject.layer == 6)
         {
             isground = true;
-            Debug.Log("estou no chao");
-
+            Debug.Log("Estou no chão");
         }
         if (colisao.gameObject.layer == 7)
         {
             isground = true;
-            Debug.Log("tocou na caixa");
+            Debug.Log("Tocou na caixa");
         }
+    }
+
+    // Sistema de vida
+    public void TakeDamagePlayer(int damage)
+    {
+        currentHealth -= damage;
+        healthBar.SetHealth(currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Debug.Log("Player morreu!");
+        Destroy(gameObject);
+        // Adicione lógica para reiniciar o jogo, ativar animação de morte, etc.
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-
     public float speed;
     public bool grond = true;
     public Transform groundCheck;
@@ -13,47 +12,55 @@ public class Enemy : MonoBehaviour
 
     public Transform player;
     public float detectionRange;
-    public float minDistanceToPlayer = 1.5f;
+    public float attackRange = 1f; // Distância de ataque
     private bool isChasing = false;
 
-    void Start()
-    {
-        
-    }
+    private int patrolDirection = 1;  // 1 para direita, -1 para esquerda
 
-    // Update is called once per frame
+    public int health = 3; // Vida do inimigo
+
+    // Área de detecção do ataque (objeto com trigger)
+    public Collider2D attackRangeCollider;
+
+    private bool isAttacking = false;  // Flag para verificar se está atacando
+    public float attackInterval = 1f;  // Intervalo de tempo entre ataques
+
     void Update()
     {
         DetectPlayer();
 
-        if (isChasing)
+        if (isChasing && !isAttacking)
         {
             MoveTowardsPlayer();
         }
         else
         {
             patrol();
-        }        
+        }
     }
 
     void patrol()
     {
-        transform.Translate(Vector2.right * speed * Time.deltaTime);
+        if (isAttacking) return;  // Impede que o inimigo patrulhe enquanto ataca.
+
+        transform.Translate(Vector2.right * patrolDirection * speed * Time.deltaTime);
 
         grond = Physics2D.Linecast(groundCheck.position, transform.position + Vector3.down * 0.1f, grondLayer);
-        Debug.Log(grond);
-
         if (grond == false)
         {
-            speed *= -1;
+            // speed *= -1;
             flip();
         }
-
     }
 
-    void flip ()
+    void flip()
     {
+        // Impede flip durante o ataque
+        if (isAttacking) return;
+
         facingRight = !facingRight;
+        patrolDirection *= -1;
+
         Vector3 Scale = transform.localScale;
         Scale.x *= -1;
         transform.localScale = Scale;
@@ -61,25 +68,49 @@ public class Enemy : MonoBehaviour
 
     void DetectPlayer()
     {
-        isChasing = Physics2D.OverlapCircle(transform.position, detectionRange, LayerMask.GetMask("Player"));
+        // Verifica a distância entre o inimigo e o jogador
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        if (!isChasing && speed < 0 && facingRight || speed > 0 && !facingRight)
+        // Se o jogador estiver dentro do alcance de ataque, iniciar o ataque
+        if (distanceToPlayer <= attackRange)
         {
-            flip();
+            if (!isAttacking)  // Inicia o ataque se não estiver atacando
+            {
+                StartCoroutine(AttackPlayer());
+            }
+            isChasing = false;  // Para de perseguir quando dentro do alcance de ataque
         }
-        
+        // Se o jogador estiver dentro do alcance de detecção (fora do alcance de ataque), começa a perseguição
+        else if (distanceToPlayer <= detectionRange)
+        {
+            isChasing = true;  // Começa a perseguir
+            if (isAttacking)
+            {
+                StopCoroutine(AttackPlayer());  // Para o ataque se o jogador sair do alcance de ataque
+                isAttacking = false;
+            }
+        }
+        else
+        {
+            isChasing = false;  // O inimigo não persegue quando o jogador está fora do alcance
+        }
     }
 
     void MoveTowardsPlayer()
     {
+        // Se o inimigo está atacando, ele não deve se mover
+        if (isAttacking) return;
+
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        if (distanceToPlayer > minDistanceToPlayer)
+        // Só se move se estiver fora do alcance de ataque
+        if (distanceToPlayer > attackRange)
         {
             Vector2 direction = new Vector2(player.position.x - transform.position.x, 0).normalized;
-            
+
             transform.Translate(direction * Mathf.Abs(speed) * Time.deltaTime);
-            
+
+            // Flip para que o inimigo sempre olhe para o jogador
             if ((player.position.x > transform.position.x && !facingRight) ||
                 (player.position.x < transform.position.x && facingRight))
             {
@@ -87,5 +118,47 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-}
 
+    // Coroutine para atacar o jogador
+    IEnumerator AttackPlayer()
+    {
+        isAttacking = true;
+
+        // Atacar enquanto o inimigo estiver na área de ataque
+        while (isAttacking)
+        {
+            Debug.Log("Inimigo atacando o jogador!");
+            Player playerScript = player.GetComponent<Player>();
+
+            if (playerScript != null)
+            {
+                playerScript.TakeDamagePlayer(20);  // Valor do dano
+            }
+
+            yield return new WaitForSeconds(attackInterval);  // Intervalo entre ataques
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        Debug.Log($"Inimigo recebeu {damage} de dano! Vida restante: {health}");
+
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Debug.Log("Inimigo morreu!");
+        Destroy(gameObject); // Remove o inimigo da cena
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+}
