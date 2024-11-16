@@ -264,7 +264,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -0.30999756, y: 0}
-  m_SizeDelta: {x: 9.39, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &199092345
 MonoBehaviour:
@@ -369,7 +369,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &496773251
 GameObject:
@@ -1343,7 +1343,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 4.066857
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1368,7 +1368,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: -0.94, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1521,7 +1521,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1216213817}
-  - component: {fileID: 1216213816}
+  - component: {fileID: 1216213818}
   m_Layer: 3
   m_Name: AttackPoint
   m_TagString: Untagged
@@ -1529,7 +1529,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!58 &1216213816
+--- !u!4 &1216213817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216213815}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.435, y: -0.07, z: 0}
+  m_LocalScale: {x: 1.2328578, y: 0.99265426, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1758004744}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1216213818
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1561,24 +1576,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.16742408, y: 0}
   serializedVersion: 2
-  m_Radius: 0.35
---- !u!4 &1216213817
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1216213815}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3, y: -0.07, z: 0}
-  m_LocalScale: {x: 1.2328578, y: 0.99265426, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1758004744}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Radius: 0.33257592
 --- !u!1 &1305305007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1999,8 +1999,8 @@ Transform:
   m_GameObject: {fileID: 1758004741}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.326, y: -4.063, z: 0}
-  m_LocalScale: {x: 1.0095, y: 1.0074, z: 1}
+  m_LocalPosition: {x: 5.3156, y: -4.063, z: 0}
+  m_LocalScale: {x: 0.99990976, y: 1.0074, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 26925060}
@@ -2090,9 +2090,9 @@ MonoBehaviour:
   facingRight: 1
   player: {fileID: 1305305009}
   detectionRange: 2.5
-  attackRange: 1
-  health: 3
-  attackRangeCollider: {fileID: 1216213816}
+  attackRange: 0.75
+  health: 20
+  attackRangeCollider: {fileID: 1216213818}
   attackInterval: 1
 --- !u!1 &1761165227
 GameObject:
@@ -2131,7 +2131,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -434.1, y: 291.97}
+  m_AnchoredPosition: {x: -505, y: 291.97}
   m_SizeDelta: {x: 221.8, y: 36.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1761165229
@@ -2174,7 +2174,7 @@ MonoBehaviour:
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0.5
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -2193,7 +2193,7 @@ MonoBehaviour:
   m_Direction: 0
   m_MinValue: 0
   m_MaxValue: 100
-  m_WholeNumbers: 0
+  m_WholeNumbers: 1
   m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:

@@ -81,11 +81,21 @@ public class Player : MonoBehaviour
 
             if (hit != null)
             {
-                Debug.Log(hit.name);
+                Debug.Log($"Atingiu: {hit.name}");
+
+                // Aplica dano se o objeto atingido for um inimigo
+                Enemy enemy = hit.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    enemy.TakeDamageEnemy(7); // Dano causado pelo jogador
+                    Debug.Log("Dano aplicado ao inimigo!");
+                }
             }
+
             StartCoroutine(OnAttack());
         }
     }
+
 
     private void OnDrawGizmos()
     {
@@ -124,10 +134,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Die()
+    public void Die()
     {
         Debug.Log("Player morreu!");
         Destroy(gameObject);
-        // Adicione lógica para reiniciar o jogo, ativar animação de morte, etc.
+        Time.timeScale = 0f; // Pausa o jogo, simular derrota
     }
+
 }

@@ -17,13 +17,15 @@ public class Enemy : MonoBehaviour
 
     private int patrolDirection = 1;  // 1 para direita, -1 para esquerda
 
-    public int health = 3; // Vida do inimigo
+    public int health = 20; // Vida do inimigo
 
     // Área de detecção do ataque (objeto com trigger)
     public Collider2D attackRangeCollider;
 
     private bool isAttacking = false;  // Flag para verificar se está atacando
     public float attackInterval = 1f;  // Intervalo de tempo entre ataques
+    private float lastAttackTime = 0f;  // Tempo do último ataque
+
 
     void Update()
     {
@@ -127,19 +129,26 @@ public class Enemy : MonoBehaviour
         // Atacar enquanto o inimigo estiver na área de ataque
         while (isAttacking)
         {
-            Debug.Log("Inimigo atacando o jogador!");
-            Player playerScript = player.GetComponent<Player>();
-
-            if (playerScript != null)
+            if (Time.time >= lastAttackTime + attackInterval)  // Checa se o intervalo foi respeitado
             {
-                playerScript.TakeDamagePlayer(20);  // Valor do dano
+                Debug.Log("Inimigo atacando o jogador!");
+
+                // Aplica dano ao jogador
+                Player playerScript = player.GetComponent<Player>();
+                if (playerScript != null)
+                {
+                    playerScript.TakeDamagePlayer(5);  // Valor do dano
+                }
+
+                lastAttackTime = Time.time;  // Atualiza o tempo do último ataque
             }
 
-            yield return new WaitForSeconds(attackInterval);  // Intervalo entre ataques
+            yield return null;  // Espera um frame antes de continuar
         }
     }
 
-    public void TakeDamage(int damage)
+
+    public void TakeDamageEnemy(int damage)
     {
         health -= damage;
         Debug.Log($"Inimigo recebeu {damage} de dano! Vida restante: {health}");
@@ -160,5 +169,6 @@ public class Enemy : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
