@@ -47,6 +47,7 @@ public class Enemy : MonoBehaviour
 
         transform.Translate(Vector2.right * patrolDirection * speed * Time.deltaTime);
 
+
         grond = Physics2D.Linecast(groundCheck.position, transform.position + Vector3.down * 0.1f, grondLayer);
         if (grond == false)
         {
