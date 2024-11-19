@@ -11,54 +11,66 @@ public class Enemy : MonoBehaviour
     public bool facingRight = true;
 
     public Transform player;
-    public float detectionRange;
-    public float attackRange = 1f; // Distância de ataque
+    public float detectionRangeX = 5f; // Largura da área de detecção
+    public float detectionRangeY = 2f; // Altura da área de detecção
+    public float attackRangeX = 1f;  // Largura da área de ataque
+    public float attackRangeY = 1f;  // Altura da área de ataque
     private bool isChasing = false;
 
     private int patrolDirection = 1;  // 1 para direita, -1 para esquerda
 
     public int health = 20; // Vida do inimigo
-
-    // Área de detecção do ataque (objeto com trigger)
-    public Collider2D attackRangeCollider;
+    private bool isDead = false; // Verifica se já morreu
 
     private bool isAttacking = false;  // Flag para verificar se está atacando
     public float attackInterval = 1f;  // Intervalo de tempo entre ataques
     private float lastAttackTime = 0f;  // Tempo do último ataque
 
+    // Referência ao Animator
+    private Animator anim;
+
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     void Update()
     {
+        if (isDead) return; // Interrompe as ações se o inimigo estiver morto
+
         DetectPlayer();
 
-        if (isChasing && !isAttacking)
+        if (isAttacking)
         {
+            anim.SetInteger("TransicaoCereja", 2); // Estado de ataque
+        }
+        else if (isChasing)
+        {
+            anim.SetInteger("TransicaoCereja", 1); // Estado de perseguição
             MoveTowardsPlayer();
         }
         else
         {
+            anim.SetInteger("TransicaoCereja", 1); // Estado de patrulha
             patrol();
         }
     }
 
     void patrol()
     {
-        if (isAttacking) return;  // Impede que o inimigo patrulhe enquanto ataca.
+        if (isAttacking) return;
 
         transform.Translate(Vector2.right * patrolDirection * speed * Time.deltaTime);
-
 
         grond = Physics2D.Linecast(groundCheck.position, transform.position + Vector3.down * 0.1f, grondLayer);
         if (grond == false)
         {
-            // speed *= -1;
             flip();
         }
     }
 
     void flip()
     {
-        // Impede flip durante o ataque
         if (isAttacking) return;
 
         facingRight = !facingRight;
@@ -71,88 +83,119 @@ public class Enemy : MonoBehaviour
 
     void DetectPlayer()
     {
-        // Verifica a distância entre o inimigo e o jogador
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+        // Verifica a detecção usando OverlapBox
+        Collider2D playerCollider = Physics2D.OverlapBox(transform.position, new Vector2(detectionRangeX, detectionRangeY), 0f, LayerMask.GetMask("Player"));
 
-        // Se o jogador estiver dentro do alcance de ataque, iniciar o ataque
-        if (distanceToPlayer <= attackRange)
+        if (playerCollider != null)
         {
-            if (!isAttacking)  // Inicia o ataque se não estiver atacando
+            // Calcula a distância até o jogador
+            float distanceToPlayer = Vector2.Distance(transform.position, playerCollider.transform.position);
+
+            // Se o jogador está dentro da área de ataque
+            if (distanceToPlayer <= attackRangeX)
             {
-                StartCoroutine(AttackPlayer());
+                if (!isAttacking)
+                {
+                    StartCoroutine(AttackPlayer()); // Inicia o ataque
+                }
+                isChasing = false; // Para a perseguição, pois estamos atacando
             }
-            isChasing = false;  // Para de perseguir quando dentro do alcance de ataque
-        }
-        // Se o jogador estiver dentro do alcance de detecção (fora do alcance de ataque), começa a perseguição
-        else if (distanceToPlayer <= detectionRange)
-        {
-            isChasing = true;  // Começa a perseguir
-            if (isAttacking)
+            // Se o jogador está dentro da área de detecção, mas fora da área de ataque
+            else if (distanceToPlayer <= detectionRangeX)
             {
-                StopCoroutine(AttackPlayer());  // Para o ataque se o jogador sair do alcance de ataque
-                isAttacking = false;
+                isChasing = true;
+                if (isAttacking)
+                {
+                    StopCoroutine(AttackPlayer()); // Para a coroutine de ataque se o inimigo estava atacando
+                    isAttacking = false;
+                }
+            }
+            else
+            {
+                isChasing = false; // Para a perseguição se o jogador sair da área de detecção
             }
         }
         else
         {
-            isChasing = false;  // O inimigo não persegue quando o jogador está fora do alcance
+            isChasing = false; // Para a perseguição se o jogador não for detectado
         }
     }
 
     void MoveTowardsPlayer()
     {
-        // Se o inimigo está atacando, ele não deve se mover
-        if (isAttacking) return;
+        if (isAttacking) return; // Não se move durante o ataque
 
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
-
-        // Só se move se estiver fora do alcance de ataque
-        if (distanceToPlayer > attackRange)
+        // Verifica se há chão à frente antes de se mover
+        grond = Physics2D.Linecast(groundCheck.position, transform.position + Vector3.down * 0.1f, grondLayer);
+        if (!grond)
         {
-            Vector2 direction = new Vector2(player.position.x - transform.position.x, 0).normalized;
+            isChasing = false; // Para a perseguição se não houver chão
+            anim.SetInteger("TransicaoCereja", 0);
+            return;
+        }
 
+        Collider2D playerCollider = Physics2D.OverlapBox(transform.position, new Vector2(detectionRangeX, detectionRangeY), 0f, LayerMask.GetMask("Player"));
+
+        if (playerCollider != null)
+        {
+            // Move o inimigo em direção ao jogador
+            Vector2 direction = new Vector2(playerCollider.transform.position.x - transform.position.x, 0).normalized;
             transform.Translate(direction * Mathf.Abs(speed) * Time.deltaTime);
 
-            // Flip para que o inimigo sempre olhe para o jogador
-            if ((player.position.x > transform.position.x && !facingRight) ||
-                (player.position.x < transform.position.x && facingRight))
+            // Verifica se o inimigo precisa virar para o outro lado
+            if ((playerCollider.transform.position.x > transform.position.x && !facingRight) ||
+                (playerCollider.transform.position.x < transform.position.x && facingRight))
             {
-                flip();
+                flip(); // Inverte a direção do inimigo
             }
         }
     }
 
-    // Coroutine para atacar o jogador
+
     IEnumerator AttackPlayer()
     {
         isAttacking = true;
 
-        // Atacar enquanto o inimigo estiver na área de ataque
-        while (isAttacking)
+        while (isAttacking && !isDead)
         {
-            if (Time.time >= lastAttackTime + attackInterval)  // Checa se o intervalo foi respeitado
+            if (Time.time >= lastAttackTime + attackInterval) // Verifica o intervalo entre ataques
             {
                 Debug.Log("Inimigo atacando o jogador!");
-
-                // Aplica dano ao jogador
                 Player playerScript = player.GetComponent<Player>();
                 if (playerScript != null)
                 {
-                    playerScript.TakeDamagePlayer(5);  // Valor do dano
+                    playerScript.TakeDamagePlayer(5); // Aplica dano ao jogador
                 }
-
-                lastAttackTime = Time.time;  // Atualiza o tempo do último ataque
+                lastAttackTime = Time.time;
             }
+            yield return null;
+        }
+        isAttacking = false;
+    }
 
-            yield return null;  // Espera um frame antes de continuar
+    IEnumerator FlashDamage()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer != null)
+        {
+            // Altera a cor para vermelho
+            spriteRenderer.color = Color.red;
+
+            // Espera por 0.2 segundos
+            yield return new WaitForSeconds(0.2f);
+
+            // Retorna à cor original (geralmente branca)
+            spriteRenderer.color = Color.white;
         }
     }
 
-
     public void TakeDamageEnemy(int damage)
     {
+        if (isDead) return;
+
+        StartCoroutine(FlashDamage());
         health -= damage;
-        Debug.Log($"Inimigo recebeu {damage} de dano! Vida restante: {health}");
 
         if (health <= 0)
         {
@@ -162,14 +205,32 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        if (isDead) return; // Evita múltiplas execuções
+
+        isDead = true; // Marca o inimigo como morto
+        anim.SetInteger("TransicaoCereja", 5); // Estado de morte
         Debug.Log("Inimigo morreu!");
-        Destroy(gameObject); // Remove o inimigo da cena
+
+        // Restaura a cor padrão
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = Color.white; // Define a cor padrão (geralmente branca)
+        }
+
+        // Para todas as coroutines ativas
+        StopAllCoroutines();
+
+        // Remove o inimigo após 1 segundo
+        Destroy(gameObject, 1.3f);
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        // Desenha a caixa de detecção
+        Gizmos.DrawWireCube(transform.position, new Vector3(detectionRangeX, detectionRangeY, 0f));
+        // Desenha a caixa de ataque
+        Gizmos.DrawWireCube(transform.position, new Vector3(attackRangeX, attackRangeY, 0f));
     }
 }
