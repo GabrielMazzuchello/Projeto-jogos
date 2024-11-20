@@ -1,0 +1,36 @@
+using UnityEngine;
+
+public class PlayerData : MonoBehaviour
+{
+    public static PlayerData Instance;  // Instância única para acesso global
+
+    public int currentHealth;  // Vida atual
+    public int maxHealth = 100; // Vida máxima
+
+    void Awake()
+    {
+        // Verifica se já existe uma instância. Se não, cria a instância.
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Não destrói o objeto ao trocar de cena
+        }
+        else
+        {
+            Destroy(gameObject); // Se já existe, destrói este objeto
+        }
+
+        // Se currentHealth não foi atribuído (primeira vez que o jogo inicia),
+        // inicializa com maxHealth
+        if (currentHealth == 0)
+        {
+            currentHealth = maxHealth;
+        }
+    }
+
+    // Reseta a vida para o valor máximo no início de cada cena, se necessário
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+    }
+}

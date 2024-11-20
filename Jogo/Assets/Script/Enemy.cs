@@ -32,6 +32,18 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+
+        // Localiza automaticamente o jogador pelo Tag "Player"
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        if (playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+        else
+        {
+            Debug.LogWarning("Player não encontrado! Verifique se o jogador tem a tag 'Player'.");
+        }
+
     }
 
     void Update()

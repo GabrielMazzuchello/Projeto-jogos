@@ -17,17 +17,18 @@ public class Player : MonoBehaviour
 
     // Para vida
     public int maxHealth = 100; // Vida máxima
-    public int currentHealth;  // Vida atual
     public HealthBar healthBar; // Referência para a barra de vida
 
     void Start()
     {
+        // Procura pela barra de vida na cena atual (caso seja necessário ajustar referência)
+        if (PlayerData.Instance != null)
+        {
+            healthBar.SetMaxHealth(PlayerData.Instance.maxHealth);
+            healthBar.SetHealth(PlayerData.Instance.currentHealth);
+        }
         rigd = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-
-        // Configurar vida inicial
-        currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
     }
 
     void Update()
@@ -125,10 +126,11 @@ public class Player : MonoBehaviour
     // Sistema de vida
     public void TakeDamagePlayer(int damage)
     {
-        currentHealth -= damage;
-        healthBar.SetHealth(currentHealth);
+        PlayerData.Instance.currentHealth -= damage;
 
-        if (currentHealth <= 0)
+        healthBar.SetHealth(PlayerData.Instance.currentHealth);
+
+        if (PlayerData.Instance.currentHealth <= 0)
         {
             Die();
         }
