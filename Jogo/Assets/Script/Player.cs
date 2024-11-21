@@ -78,9 +78,8 @@ public class Player : MonoBehaviour
             isattack = true;
             anim.SetInteger("transitions", 3);
 
-            Collider2D hit = Physics2D.OverlapCircle(point.position, radius);
-
-            if (hit != null)
+            Collider2D[] hits = Physics2D.OverlapCircleAll(point.position, radius, LayerMask.GetMask("Enemy"));
+            foreach (Collider2D hit in hits)
             {
                 Debug.Log($"Atingiu: {hit.name}");
 
@@ -96,6 +95,7 @@ public class Player : MonoBehaviour
             StartCoroutine(OnAttack());
         }
     }
+
 
 
     private void OnDrawGizmos()

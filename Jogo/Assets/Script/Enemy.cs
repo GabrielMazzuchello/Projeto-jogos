@@ -72,10 +72,18 @@ public class Enemy : MonoBehaviour
     {
         if (isAttacking) return;
 
+        // Move o inimigo na direção atual
         transform.Translate(Vector2.right * patrolDirection * speed * Time.deltaTime);
 
+        // Verifica se há chão à frente
         grond = Physics2D.Linecast(groundCheck.position, transform.position + Vector3.down * 0.1f, grondLayer);
-        if (grond == false)
+
+        // Verifica se há obstáculos horizontais à frente
+        Vector2 direction = facingRight ? Vector2.right : Vector2.left;
+        RaycastHit2D obstacle = Physics2D.Raycast(transform.position, direction, 2f, grondLayer);
+
+        // Se não houver chão ou houver obstáculo, inverter a direção
+        if (!grond || obstacle.collider != null)
         {
             flip();
         }

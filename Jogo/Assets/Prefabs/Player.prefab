@@ -209,10 +209,9 @@ MonoBehaviour:
   anim: {fileID: 4804232841952493396}
   isground: 0
   point: {fileID: 6889925355421144931}
-  radius: 0.35
+  radius: 0.5
   isattack: 0
   maxHealth: 100
-  currentHealth: 100
   healthBar: {fileID: 0}
 --- !u!95 &4804232841952493396
 Animator:
