@@ -24,19 +24,25 @@ public class Player : MonoBehaviour
     private int TransitionPlayer = 0;
     private bool isDead = false; // Flag para verificar se o jogador morreu
 
+    // Verificação de parede
+    public Transform wallCheck;
+    public float wallCheckDistance = 0.1f;
+    public LayerMask groundLayer;
+    private bool isTouchingWall;
+
+    // Materiais de fricção
+    public PhysicsMaterial2D noFrictionMaterial;
+    public PhysicsMaterial2D normalFrictionMaterial;
+
     void Start()
     {
-        // Procura pela barra de vida na cena atual (caso seja necessário ajustar referência)
         if (PlayerData.Instance != null)
         {
-            Debug.Log("Vida inicial: " + PlayerData.Instance.currentHealth);  // Verifique o valor da vida
-
             if (PlayerData.Instance.currentHealth == 0)
             {
-                PlayerData.Instance.currentHealth = PlayerData.Instance.maxHealth; // Restaura a vida se estiver 0
+                PlayerData.Instance.currentHealth = PlayerData.Instance.maxHealth;
             }
-
-            healthBar.SetHealth(PlayerData.Instance.currentHealth); // Atualiza a barra de vida
+            healthBar.SetHealth(PlayerData.Instance.currentHealth);
         }
         rigd = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
@@ -44,20 +50,38 @@ public class Player : MonoBehaviour
         gameOverUI = GameObject.Find("GameOver");
         if (gameOverUI != null)
         {
-            gameOverUI.SetActive(false); // Desativa o painel na inicialização
+            gameOverUI.SetActive(false);
         }
     }
 
     void Update()
     {
-        if (isDead) return; // Se o jogador estiver morto, não processa mais o movimento nem outras animações.
+        if (isDead) return;
 
+        CheckWallCollision();
+        AdjustFriction(); // Ajusta a fricção com base na colisão com a parede
         Move();
         Jump();
         Attack();
 
-        // Atualiza a animação baseada na transição
         anim.SetInteger("TransitionPlayer", TransitionPlayer);
+    }
+
+    void CheckWallCollision()
+    {
+        isTouchingWall = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, groundLayer);
+    }
+
+    void AdjustFriction()
+    {
+        if (isTouchingWall && !isground)
+        {
+            rigd.sharedMaterial = noFrictionMaterial; // Remove fricção para evitar o "grudar"
+        }
+        else
+        {
+            rigd.sharedMaterial = normalFrictionMaterial; // Restaura fricção
+        }
     }
 
     void Move()
@@ -65,19 +89,31 @@ public class Player : MonoBehaviour
         if (isDead) return; // Impede que o jogador se mova após a morte
 
         float teclas = Input.GetAxis("Horizontal");
-        rigd.velocity = new Vector2(teclas * speed, rigd.velocity.y);
 
-        if (teclas > 0 && isground == true && !isattack)
+        // Verifica se o jogador está tocando a parede e tentando se mover na direção da parede
+        if (isTouchingWall && teclas != 0)
+        {
+            // Se estiver pressionando a direção da parede (em direção à parede), evita que o jogador "grude".
+            rigd.velocity = new Vector2(0, rigd.velocity.y); // Zera a velocidade horizontal para evitar colidir mais
+        }
+        else
+        {
+            // Caso contrário, o jogador pode se mover normalmente
+            rigd.velocity = new Vector2(teclas * speed, rigd.velocity.y);
+        }
+
+        // Atualiza a animação e a direção do personagem
+        if (teclas > 0 && isground && !isattack)
         {
             transform.eulerAngles = new Vector2(0, 0);
             TransitionPlayer = 1; // Correndo
         }
-        else if (teclas < 0 && isground == true && !isattack)
+        else if (teclas < 0 && isground && !isattack)
         {
             transform.eulerAngles = new Vector2(0, 180);
             TransitionPlayer = 1; // Correndo
         }
-        else if (teclas == 0 && isground == true && !isattack)
+        else if (teclas == 0 && isground && !isattack)
         {
             TransitionPlayer = 0; // Idle
         }
@@ -85,36 +121,34 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        if (isDead) return; // Impede que o jogador pule após a morte
+        if (isDead || isTouchingWall) return;
 
-        if (Input.GetKeyDown(KeyCode.Space) && isground == true && !isattack)
+        if (Input.GetKeyDown(KeyCode.Space) && isground && !isattack)
         {
             rigd.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
-            TransitionPlayer = 2; // Pular
+            TransitionPlayer = 2;
             isground = false;
         }
     }
 
     void Attack()
     {
-        if (isDead) return; // Impede que o jogador ataque após a morte
+        if (isDead) return;
 
         if (Input.GetButtonDown("Fire1") && !isattack)
         {
             isattack = true;
-            TransitionPlayer = 3; // Ataque
+            TransitionPlayer = 3;
 
             Collider2D[] hits = Physics2D.OverlapCircleAll(point.position, radius, LayerMask.GetMask("Enemy"));
             foreach (Collider2D hit in hits)
             {
                 Debug.Log($"Atingiu: {hit.name}");
 
-                // Aplica dano se o objeto atingido for um inimigo
                 Enemy enemy = hit.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamageEnemy(7); // Dano causado pelo jogador
-                    Debug.Log("Dano aplicado ao inimigo!");
+                    enemy.TakeDamageEnemy(7);
                 }
             }
 
@@ -125,16 +159,17 @@ public class Player : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(point.position, radius);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(wallCheck.position, wallCheck.position + transform.right * wallCheckDistance);
     }
 
     IEnumerator OnAttack()
     {
-        // Espera o tempo necessário para completar a animação de ataque
-        yield return new WaitForSeconds(1f); // Ajuste o tempo de espera para o ataque
-
+        yield return new WaitForSeconds(1f);
         isattack = false;
 
-        if (isground) TransitionPlayer = 0; // Retorna para Idle após o ataque
+        if (isground) TransitionPlayer = 0;
     }
 
     void OnCollisionEnter2D(Collision2D colisao)
@@ -142,16 +177,13 @@ public class Player : MonoBehaviour
         if (colisao.gameObject.layer == 6)
         {
             isground = true;
-            Debug.Log("Estou no chão");
         }
         if (colisao.gameObject.layer == 7)
         {
             isground = true;
-            Debug.Log("Tocou na caixa");
         }
     }
 
-    // Sistema de vida
     public void TakeDamagePlayer(int damage)
     {
         PlayerData.Instance.currentHealth -= damage;
@@ -160,35 +192,33 @@ public class Player : MonoBehaviour
 
         if (PlayerData.Instance.currentHealth <= 0 && !isDead)
         {
-            isDead = true; // Marca como morto
-            StartCoroutine(Die()); // Aguarda um tempo antes de mostrar a tela de game over
+            isDead = true;
+            StartCoroutine(Die());
         }
     }
 
     IEnumerator Die()
     {
-        TransitionPlayer = 4; // Morte
-        anim.SetInteger("TransitionPlayer", TransitionPlayer); // Atualiza imediatamente a animação para morte
+        TransitionPlayer = 4;
+        anim.SetInteger("TransitionPlayer", TransitionPlayer);
 
-        // Espera o tempo necessário para a animação de morte (ajuste o valor conforme necessário)
-        yield return new WaitForSeconds(4.5f); // Ajuste o tempo de espera para a animação de morte
+        yield return new WaitForSeconds(4.5f);
 
-        // Aqui você deve restaurar a vida do jogador
         if (PlayerData.Instance != null)
         {
-            PlayerData.Instance.currentHealth = PlayerData.Instance.maxHealth; // Restaura a vida do jogador
-            healthBar.SetHealth(PlayerData.Instance.currentHealth); // Atualiza a barra de vida
+            PlayerData.Instance.currentHealth = PlayerData.Instance.maxHealth;
+            healthBar.SetHealth(PlayerData.Instance.currentHealth);
         }
 
         if (gameOverUI != null)
         {
-            gameOverUI.SetActive(true); // Ativa a tela de Game Over
-            Time.timeScale = 0f;       // Pausa o jogo
+            gameOverUI.SetActive(true);
+            Time.timeScale = 0f;
         }
         else
         {
             Debug.LogError("Tela de Game Over não encontrada!");
         }
     }
-
 }
+        
