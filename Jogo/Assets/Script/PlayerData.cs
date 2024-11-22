@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerData : MonoBehaviour
 {
@@ -32,5 +33,11 @@ public class PlayerData : MonoBehaviour
     public void ResetHealth()
     {
         currentHealth = maxHealth;
+    }
+    public void RestartGame()
+    {
+        Time.timeScale = 1f; // Restaura o tempo
+        ResetHealth(); // Restaura a vida do jogador
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reinicia a cena
     }
 }

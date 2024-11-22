@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     public int maxHealth = 100; // Vida máxima
     public HealthBar healthBar; // Referência para a barra de vida
 
+    public GameObject gameOverUI; // Referência para a tela de game over
+
     void Start()
     {
         // Procura pela barra de vida na cena atual (caso seja necessário ajustar referência)
@@ -29,6 +31,12 @@ public class Player : MonoBehaviour
         }
         rigd = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+
+        gameOverUI = GameObject.Find("GameOver");
+        if (gameOverUI != null)
+        {
+            gameOverUI.SetActive(false); // Desativa o painel na inicialização
+        }       
     }
 
     void Update()
@@ -136,11 +144,18 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Die()
+    void Die()
     {
         Debug.Log("Player morreu!");
-        Destroy(gameObject);
-        Time.timeScale = 0f; // Pausa o jogo, simular derrota
-    }
 
+        if (gameOverUI != null)
+        {
+            gameOverUI.SetActive(true); // Ativa a tela de Game Over
+            Time.timeScale = 0f;       // Pausa o jogo
+        }
+        else
+        {
+            Debug.LogError("Tela de Game Over não encontrada!");
+        }
+    }
 }
