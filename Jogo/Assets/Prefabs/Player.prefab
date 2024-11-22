@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1513426256787496937}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.851, y: 0, z: 0}
+  m_LocalPosition: {x: 0.484, y: -0.098, z: 0}
   m_LocalScale: {x: 1.2625, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -61,8 +61,8 @@ Transform:
   m_GameObject: {fileID: 7942493386665854092}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.99, y: -2.51, z: 0}
-  m_LocalScale: {x: 0.9858, y: 1, z: 1}
+  m_LocalPosition: {x: 9.823, y: -9.09, z: 0}
+  m_LocalScale: {x: 1.1379755, y: 1.1543674, z: 1.1543674}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6889925355421144931}
@@ -109,12 +109,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -1571227609, guid: 4eb4fc4d071e42743be2041fefe8456a, type: 3}
+  m_Sprite: {fileID: -40675518, guid: 525de448715132c43b615d9ab0d65577, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 1.328125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -152,18 +152,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.049618542, y: -0.014176667}
+  m_Offset: {x: -0.012186646, y: -0.16546917}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 1, y: 1.328125}
+    newSize: {x: 1, y: 1.328125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.81570256, y: 1.0283533}
+  m_Size: {x: 0.75581145, y: 1.0504932}
   m_EdgeRadius: 0
 --- !u!50 &4103669858871389269
 Rigidbody2D:
@@ -213,6 +213,7 @@ MonoBehaviour:
   isattack: 0
   maxHealth: 100
   healthBar: {fileID: 0}
+  gameOverUI: {fileID: 0}
 --- !u!95 &4804232841952493396
 Animator:
   serializedVersion: 5
@@ -223,7 +224,7 @@ Animator:
   m_GameObject: {fileID: 7942493386665854092}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8b6ed33f983857248b747fbed3ed1b2d, type: 2}
+  m_Controller: {fileID: 9100000, guid: ea9b7900b42da9548a5633e130f402ea, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

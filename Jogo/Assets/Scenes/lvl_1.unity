@@ -2278,11 +2278,11 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
-  - first: {x: -14, y: -2, z: 0}
+  - first: {x: -13, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 3
-      m_TileSpriteIndex: 3
+      m_TileIndex: 4
+      m_TileSpriteIndex: 4
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2428,12 +2428,12 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
-  - first: {x: -6, y: 1, z: 0}
+  - first: {x: -5, y: 1, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 4
       m_TileSpriteIndex: 4
-      m_TileMatrixIndex: 3
+      m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
@@ -3116,9 +3116,9 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: cabb99e8aa893a54f937907e2b709be8, type: 2}
   - m_RefCount: 4
     m_Data: {fileID: 11400000, guid: 8fb1179a318c9854f8768bfb2eccd2ba, type: 2}
-  - m_RefCount: 29
+  - m_RefCount: 28
     m_Data: {fileID: 11400000, guid: 5644ddbc963868143a3f249c91b111f0, type: 2}
-  - m_RefCount: 102
+  - m_RefCount: 103
     m_Data: {fileID: 11400000, guid: a87333ad6a687074a999268c60c0eff7, type: 2}
   - m_RefCount: 0
     m_Data: {fileID: 0}
@@ -3135,9 +3135,9 @@ Tilemap:
     m_Data: {fileID: 2275430765569199110, guid: a419b29d7ee1f4b45acf54016a814fbb, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: -1005122710454109958, guid: a419b29d7ee1f4b45acf54016a814fbb, type: 3}
-  - m_RefCount: 29
+  - m_RefCount: 28
     m_Data: {fileID: 2660289692523306871, guid: a419b29d7ee1f4b45acf54016a814fbb, type: 3}
-  - m_RefCount: 102
+  - m_RefCount: 103
     m_Data: {fileID: 3959822602961121126, guid: a419b29d7ee1f4b45acf54016a814fbb, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
@@ -3166,7 +3166,7 @@ Tilemap:
       e31: 0
       e32: 0
       e33: 1
-  - m_RefCount: 69
+  - m_RefCount: 70
     m_Data:
       e00: 0.000000059604645
       e01: -0.99999994
@@ -3202,7 +3202,7 @@ Tilemap:
       e31: 7.34684e-40
       e32: 2.86e-43
       e33: 1
-  - m_RefCount: 25
+  - m_RefCount: 24
     m_Data:
       e00: 0.000000059604645
       e01: 0.99999994
@@ -3358,6 +3358,14 @@ CompositeCollider2D:
         Y: 30000000
       - X: -70000000
         Y: 30000000
+    - - X: -40000000
+        Y: 20000000
+      - X: -50000000
+        Y: 20000000
+      - X: -50000000
+        Y: 14375000
+      - X: -40000000
+        Y: 14375000
     - - X: -10000000
         Y: 15625000
       - X: -20000000
@@ -3389,14 +3397,6 @@ CompositeCollider2D:
       - X: 120000000
         Y: 10000000
       - X: 130000000
-        Y: 10000000
-    - - X: -50000000
-        Y: 15625000
-      - X: -60000000
-        Y: 15625000
-      - X: -60000000
-        Y: 10000000
-      - X: -50000000
         Y: 10000000
     - - X: 90000000
         Y: 5624999
@@ -3454,14 +3454,14 @@ CompositeCollider2D:
         Y: -15625000
       - X: -90000000
         Y: -15625000
-    - - X: -130000000
-        Y: -14375000
-      - X: -140000000
-        Y: -14375000
-      - X: -140000000
-        Y: -20000000
+    - - X: -120000000
+        Y: -10000000
       - X: -130000000
-        Y: -20000000
+        Y: -10000000
+      - X: -130000000
+        Y: -15625000
+      - X: -120000000
+        Y: -15625000
     - - X: -70000000
         Y: -40000000
       - X: -90000000
@@ -3552,6 +3552,14 @@ CompositeCollider2D:
       - {x: -7.0000296, y: 4}
       - {x: -12, y: 3.999971}
       - {x: -11.99997, y: 3}
+    - - {x: -4.000029, y: 1.4375}
+      - {x: -4.000029, y: 2}
+      - {x: -5, y: 1.9999708}
+      - {x: -4.999971, y: 1.4375}
+    - - {x: 12.99997, y: 1}
+      - {x: 12.99997, y: 1.5625}
+      - {x: 12, y: 1.5624707}
+      - {x: 12.00003, y: 1}
     - - {x: 5.999971, y: 1}
       - {x: 5.999971, y: 1.5625}
       - {x: 5, y: 1.5624707}
@@ -3564,14 +3572,6 @@ CompositeCollider2D:
       - {x: -1.0000293, y: 1.5625}
       - {x: -2, y: 1.5624707}
       - {x: -1.9999708, y: 1}
-    - - {x: -5.000029, y: 1}
-      - {x: -5.000029, y: 1.5625}
-      - {x: -6, y: 1.5624707}
-      - {x: -5.999971, y: 1}
-    - - {x: 12.99997, y: 1}
-      - {x: 12.99997, y: 1.5625}
-      - {x: 12, y: 1.5624707}
-      - {x: 12.00003, y: 1}
     - - {x: 8.99997, y: 0}
       - {x: 8.99997, y: 0.5624999}
       - {x: 8, y: 0.56247073}
@@ -3600,10 +3600,10 @@ CompositeCollider2D:
       - {x: -9.00003, y: -1}
       - {x: -10, y: -1.0000293}
       - {x: -9.99997, y: -1.5625}
-    - - {x: -13.00003, y: -2}
-      - {x: -13.00003, y: -1.4375}
-      - {x: -14, y: -1.4375293}
-      - {x: -13.999971, y: -2}
+    - - {x: -12.00003, y: -1.5625}
+      - {x: -12.00003, y: -1}
+      - {x: -13, y: -1.0000293}
+      - {x: -12.99997, y: -1.5625}
     - - {x: -7.0000296, y: -5}
       - {x: -7.0000296, y: -4}
       - {x: -9, y: -4.000029}
@@ -9838,11 +9838,11 @@ PrefabInstance:
       objectReference: {fileID: 1349231798}
     - target: {fileID: 7555431824292157916, guid: 8a41f8dede515e04a96536a9c1308256, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.65
+      value: 9.823
       objectReference: {fileID: 0}
     - target: {fileID: 7555431824292157916, guid: 8a41f8dede515e04a96536a9c1308256, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.38
+      value: -9.09
       objectReference: {fileID: 0}
     - target: {fileID: 7555431824292157916, guid: 8a41f8dede515e04a96536a9c1308256, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10139,6 +10139,10 @@ PrefabInstance:
     - target: {fileID: 3579451517458348659, guid: 85511dfd4d7890e43a72e018d6202d66, type: 3}
       propertyPath: m_Name
       value: GameOver
+      objectReference: {fileID: 0}
+    - target: {fileID: 3579451517458348659, guid: 85511dfd4d7890e43a72e018d6202d66, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6841583398900588246, guid: 85511dfd4d7890e43a72e018d6202d66, type: 3}
       propertyPath: m_Pivot.x

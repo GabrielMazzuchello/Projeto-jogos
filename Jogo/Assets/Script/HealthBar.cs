@@ -7,7 +7,7 @@ public class HealthBar : MonoBehaviour
 
     public void SetMaxHealth(int health)
     {
-        slider.maxValue = health; // Define o valor máximo da barra de vida
+        slider.maxValue = 100 ; // Define o valor máximo da barra de vida
         slider.value = health; // Define o valor atual da barra de vida
     }
 

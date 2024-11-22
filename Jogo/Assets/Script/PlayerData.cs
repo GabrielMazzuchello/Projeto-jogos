@@ -21,12 +21,7 @@ public class PlayerData : MonoBehaviour
             Destroy(gameObject); // Se já existe, destrói este objeto
         }
 
-        // Se currentHealth não foi atribuído (primeira vez que o jogo inicia),
-        // inicializa com maxHealth
-        if (currentHealth == 0)
-        {
-            currentHealth = maxHealth;
-        }
+        
     }
 
     // Reseta a vida para o valor máximo no início de cada cena, se necessário
