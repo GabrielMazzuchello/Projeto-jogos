@@ -205,7 +205,7 @@ public class Enemy : MonoBehaviour
             // Espera por 0.2 segundos
             yield return new WaitForSeconds(0.2f);
 
-            // Retorna à cor original (geralmente branca)
+            // Retorna à cor original
             spriteRenderer.color = Color.white;
         }
     }
@@ -225,7 +225,7 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        if (isDead) return; // Evita múltiplas execuções
+        if (isDead) return; 
 
         isDead = true; // Marca o inimigo como morto
         anim.SetInteger("TransicaoCereja", 5); // Estado de morte
@@ -235,15 +235,30 @@ public class Enemy : MonoBehaviour
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
-            spriteRenderer.color = Color.white; // Define a cor padrão (geralmente branca)
+            spriteRenderer.color = Color.white; 
         }
 
         // Para todas as coroutines ativas
         StopAllCoroutines();
 
-        // Remove o inimigo após 1 segundo
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false; // Desativa o Collider2D
+        }
+
+        // Se houver um Rigidbody2D, congela a movimentação e a rotação
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;  // Para qualquer movimento residual
+            rb.bodyType = RigidbodyType2D.Kinematic; // Congela a física
+        }
+
+        // Remove o inimigo após 1.3 segundos (tempo para animação de morte)
         Destroy(gameObject, 1.3f);
     }
+
 
     void OnDrawGizmosSelected()
     {

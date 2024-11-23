@@ -8,6 +8,10 @@ public class Player : MonoBehaviour
     private Rigidbody2D rigd;
     public Animator anim;
     public bool isground;
+    public Transform groundCheck;
+    public Vector2 groundCheckSize = new Vector2(0.5f, 0.1f);
+    public LayerMask groundLayer; // Layer que representa o chão
+
 
     // Para o ataque
     public Transform point;
@@ -22,12 +26,11 @@ public class Player : MonoBehaviour
 
     // Variável para controlar as animações
     private int TransitionPlayer = 0;
-    private bool isDead = false; // Flag para verificar se o jogador morreu
+    private bool isDead = false; // Para verificar se o jogador morreu
 
     // Verificação de parede
     public Transform wallCheck;
-    public float wallCheckDistance = 0.1f;
-    public LayerMask groundLayer;
+    public Vector2 wallCheckSize = new Vector2(0.2f, 1f);
     private bool isTouchingWall;
 
     // Materiais de fricção
@@ -58,8 +61,9 @@ public class Player : MonoBehaviour
     {
         if (isDead) return;
 
+        CheckGround(); // Verifica se o jogador está no chão
         CheckWallCollision();
-        AdjustFriction(); // Ajusta a fricção com base na colisão com a parede
+        AdjustFriction();
         Move();
         Jump();
         Attack();
@@ -67,16 +71,23 @@ public class Player : MonoBehaviour
         anim.SetInteger("TransitionPlayer", TransitionPlayer);
     }
 
+    void CheckGround()
+    {
+        // Verifica se há colisão no retângulo do groundCheck
+        isground = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer);
+    }
+
     void CheckWallCollision()
     {
-        isTouchingWall = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, groundLayer);
+        Vector2 boxCenter = wallCheck.position; // Posição da verificação
+        isTouchingWall = Physics2D.OverlapBox(boxCenter, wallCheckSize, 0f, groundLayer);
     }
 
     void AdjustFriction()
     {
         if (isTouchingWall && !isground)
         {
-            rigd.sharedMaterial = noFrictionMaterial; // Remove fricção para evitar o "grudar"
+            rigd.velocity = new Vector2(0, rigd.velocity.y); // Impede movimento horizontal
         }
         else
         {
@@ -91,33 +102,45 @@ public class Player : MonoBehaviour
         float teclas = Input.GetAxis("Horizontal");
 
         // Verifica se o jogador está tocando a parede e tentando se mover na direção da parede
-        if (isTouchingWall && teclas != 0)
+        if (isTouchingWall && teclas != 0 && Mathf.Sign(teclas) == Mathf.Sign(transform.right.x))
         {
-            // Se estiver pressionando a direção da parede (em direção à parede), evita que o jogador "grude".
-            rigd.velocity = new Vector2(0, rigd.velocity.y); // Zera a velocidade horizontal para evitar colidir mais
+            // Remove a velocidade ao colidir na parede, para não grudar
+            rigd.velocity = new Vector2(teclas * speed * 0f, rigd.velocity.y);
         }
         else
         {
-            // Caso contrário, o jogador pode se mover normalmente
             rigd.velocity = new Vector2(teclas * speed, rigd.velocity.y);
         }
 
-        // Atualiza a animação e a direção do personagem
-        if (teclas > 0 && isground && !isattack)
+        // Atualiza a direção da sprite (flip) com base no movimento horizontal
+        if (teclas > 0)
         {
             transform.eulerAngles = new Vector2(0, 0);
-            TransitionPlayer = 1; // Correndo
         }
-        else if (teclas < 0 && isground && !isattack)
+        else if (teclas < 0)
         {
             transform.eulerAngles = new Vector2(0, 180);
-            TransitionPlayer = 1; // Correndo
         }
-        else if (teclas == 0 && isground && !isattack)
+
+        // Atualiza a animação com base no estado (correndo, parado, pulando)
+        if (isground) // No chão
         {
-            TransitionPlayer = 0; // Idle
+            if (teclas != 0 && !isattack)
+            {
+                TransitionPlayer = 1; // Correndo
+            }
+            else if (teclas == 0 && !isattack)
+            {
+                TransitionPlayer = 0; // Idle
+            }
+        }
+        else // No ar
+        {
+            TransitionPlayer = 2; // Pulando
         }
     }
+
+
 
     void Jump()
     {
@@ -168,8 +191,12 @@ public class Player : MonoBehaviour
     {
         Gizmos.DrawWireSphere(point.position, radius);
 
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(groundCheck.position, groundCheckSize);
+
+
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(wallCheck.position, wallCheck.position + transform.right * wallCheckDistance);
+        Gizmos.DrawWireCube(wallCheck.position, wallCheckSize);
     }
 
     IEnumerator OnAttack()
@@ -229,4 +256,3 @@ public class Player : MonoBehaviour
         }
     }
 }
-        

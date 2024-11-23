@@ -24,7 +24,6 @@ public class PlayerData : MonoBehaviour
         
     }
 
-    // Reseta a vida para o valor máximo no início de cada cena, se necessário
     public void ResetHealth()
     {
         currentHealth = maxHealth;

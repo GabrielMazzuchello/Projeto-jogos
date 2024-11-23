@@ -133,13 +133,24 @@ public class Enemybanana : MonoBehaviour
             else
             {
                 isChasing = false; // Para a perseguição se o jogador sair da área de detecção
+                if (isAttacking)
+                {
+                    StopCoroutine(AttackPlayer()); // Para a coroutine de ataque se o jogador sair da área
+                    isAttacking = false;
+                }
             }
         }
         else
         {
             isChasing = false; // Para a perseguição se o jogador não for detectado
+            if (isAttacking)
+            {
+                StopCoroutine(AttackPlayer()); // Para a coroutine de ataque se o jogador sair da área de detecção
+                isAttacking = false;
+            }
         }
     }
+
 
     void MoveTowardsPlayer()
     {
@@ -225,7 +236,7 @@ public class Enemybanana : MonoBehaviour
 
     void Die()
     {
-        if (isDead) return; // Evita múltiplas execuções
+        if (isDead) return; 
 
         isDead = true; // Marca o inimigo como morto
         anim.SetInteger("TransitionBanana", 5); // Estado de morte
@@ -235,15 +246,34 @@ public class Enemybanana : MonoBehaviour
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
-            spriteRenderer.color = Color.white; // Define a cor padrão (geralmente branca)
+            spriteRenderer.color = Color.white; 
         }
 
         // Para todas as coroutines ativas
         StopAllCoroutines();
 
-        // Remove o inimigo após 1 segundo
+        // Desabilita o Collider2D para que o inimigo não tenha mais colisões
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        // Para o movimento do inimigo
+        speed = 0f;
+
+        
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeAll; 
+        }
+
+        // Remove o inimigo após 1 segundo (ajuste o tempo conforme necessário)
         Destroy(gameObject, 1.6f);
     }
+
+
 
     void OnDrawGizmosSelected()
     {
