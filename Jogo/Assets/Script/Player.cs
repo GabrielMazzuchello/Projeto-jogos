@@ -4,7 +4,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed = 5f;
-    public float JumpForce = 6f;
+    public float JumpForce = 7f;
     private Rigidbody2D rigd;
     public Animator anim;
     public bool isground;
@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public bool isattack;
 
     // Para vida
-    public int maxHealth = 100; // Vida máxima
+    public int maxHealth = 200; // Vida máxima
     public HealthBar healthBar; // Referência para a barra de vida
 
     public GameObject gameOverUI; // Referência para a tela de game over
@@ -121,7 +121,7 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        if (isDead || isTouchingWall) return;
+        if (isDead) return;
 
         if (Input.GetKeyDown(KeyCode.Space) && isground && !isattack)
         {
@@ -145,10 +145,18 @@ public class Player : MonoBehaviour
             {
                 Debug.Log($"Atingiu: {hit.name}");
 
+                // Verifica se o objeto atingido tem o script Enemy
                 Enemy enemy = hit.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamageEnemy(7);
+                    enemy.TakeDamageEnemy(10);
+                }
+
+                // Verifica se o objeto atingido tem o script Enemybanana
+                Enemybanana enemyBanana = hit.GetComponent<Enemybanana>();
+                if (enemyBanana != null)
+                {
+                    enemyBanana.TakeDamageEnemy(10);
                 }
             }
 
@@ -166,7 +174,7 @@ public class Player : MonoBehaviour
 
     IEnumerator OnAttack()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         isattack = false;
 
         if (isground) TransitionPlayer = 0;

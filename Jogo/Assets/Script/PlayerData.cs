@@ -6,7 +6,7 @@ public class PlayerData : MonoBehaviour
     public static PlayerData Instance;  // Instância única para acesso global
 
     public int currentHealth;  // Vida atual
-    public int maxHealth = 100; // Vida máxima
+    public int maxHealth = 200; // Vida máxima
 
     void Awake()
     {
